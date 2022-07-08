@@ -4,6 +4,8 @@
 
 ## Installation
 
+The script works with Python3.7 and newer.
+
 ```shell
 curl -s https://raw.githubusercontent.com/imankulov/nfn/main/nfn.py -o /usr/local/bin/nfn
 chmod +x /usr/local/bin/nfn
