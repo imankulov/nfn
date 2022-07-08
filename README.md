@@ -34,3 +34,8 @@ Use in scripts. For example, profiling a Django management command with [cProfil
 ```shell
 $ python -m cProfile -o $(nfn djangoNNN.prof) ./manage.py migrate
 ```
+
+## Uniqueness guarantees on concurrent calls
+
+- The script doesn't guarantee file uniqueness on concurrent calls without the `--touch` flag. In other words, if you call `nfn` without `--touch` from multiple processes simultaneously, there's a chance that some of these calls return the same filenames.
+- With a `--touch` flag, the script guarantees that all invocations from the same directory return different filenames. Notice that `--touch` will also create a file in the directory.
