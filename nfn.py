@@ -35,6 +35,21 @@ def get_arguments() -> Arguments:
 
 
 def nfn(arguments: Arguments) -> str:
+    """Create a new filename.
+
+    Make up to 10 attempts to create a new file. The file creation may fail due to race
+    conditions if the "touch" flag is set.
+    """
+    attempts = 100
+    for _ in range(attempts):
+        try:
+            return try_nfn(arguments)
+        except FileExistsError:
+            pass
+    raise ValueError(f"Could not create a new file after {attempts} attempts.")
+
+
+def try_nfn(arguments: Arguments) -> str:
     """Create a new filename."""
 
     # Current directory.
@@ -50,7 +65,7 @@ def nfn(arguments: Arguments) -> str:
     # Create a new file if asked
     if arguments.touch:
         new_file = dir_path / new_filename
-        new_file.touch()
+        new_file.touch(exist_ok=False)
 
     return new_filename
 

@@ -1,3 +1,4 @@
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 import pytest
@@ -31,3 +32,10 @@ def test_nfn_touch_creates_file(tmpdir: Path):
     ret = nfn(Arguments(dir=str(tmpdir), name="fooNNN.txt", touch=True))
     assert ret == "foo001.txt"
     assert (Path(tmpdir) / "foo001.txt").is_file()
+
+
+def test_nfn_race_conditions(tmpdir: Path):
+    with ThreadPoolExecutor(max_workers=10) as executor:
+        args = [Arguments(dir=str(tmpdir), name="fooNNN.txt", touch=True)] * 100
+        result = set(executor.map(nfn, args))
+    assert len(result) == 100
